@@ -1,0 +1,3 @@
+---
+- include: playbook-install.yml
+- include: playbook-deploy.yml

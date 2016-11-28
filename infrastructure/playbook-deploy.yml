@@ -1,0 +1,15 @@
+---
+- hosts: app-rest-api
+  become: yes
+  become_method: sudo
+  tasks:
+    - name: Starting app-rest-api docker image
+      docker:
+        name: app-rest-api
+        image: ivanursul/terraform-ansible-spring-boot-demo
+        state: reloaded
+        pull: always
+        ports:
+          - "8080:8080"
+        expose:
+          - 8080

@@ -9,7 +9,7 @@ public class DemoController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String demo() {
-        return "Hello world!";
+        return "Hello big world!";
     }
 
 

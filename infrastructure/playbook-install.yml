@@ -1,0 +1,7 @@
+---
+- name: install docker
+  hosts: app-rest-api
+  become: yes
+  become_method: sudo
+  roles:
+    - { role: angstwad.docker_ubuntu, pip_version_docker_py: 1.10.6 }
