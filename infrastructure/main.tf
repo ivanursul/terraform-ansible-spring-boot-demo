@@ -10,3 +10,11 @@ resource "digitalocean_droplet" "app-rest-api" {
   size = "1gb"
   ssh_keys = ["${var.ssh_fingerprint}"]
 }
+
+resource "digitalocean_droplet" "app-monitoring" {
+  image = "ubuntu-14-04-x64"
+  name = "app-monitoring"
+  region = "${var.region}"
+  size = "512mb"
+  ssh_keys = ["${var.ssh_fingerprint}"]
+}

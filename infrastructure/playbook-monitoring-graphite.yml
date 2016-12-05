@@ -1,0 +1,72 @@
+---
+- hosts: app-monitoring
+  become: yes
+  become_method: sudo
+
+  tasks:
+  - name: Update
+    apt: update_cache=yes
+  - name: Upgrade
+    command: sudo apt-get upgrade -qq
+  - name: Installing graphite packages
+    apt: pkg={{ item }} state=latest
+    with_items:
+    - build-essential
+    - graphite-web
+    - graphite-carbon
+    - python-dev
+    - apache2
+    - libapache2-mod-wsgi
+    - libpq-dev
+    - python-psycopg2
+
+  - name: Configure storage schemas
+    action: template src=templates/storage-schemas.conf.j2 dest=/etc/carbon/storage-schemas.conf
+  - name: Copy the default aggregation
+    command: sudo cp /usr/share/doc/graphite-carbon/examples/storage-aggregation.conf.example /etc/carbon/storage-aggregation.conf
+  - name: Enable carbon cache
+    action: template src=templates/graphite-carbon.j2 dest=/etc/default/graphite-carbon
+  - name: Start carbon cache service
+    command: sudo service carbon-cache start
+
+- hosts: app-monitoring
+  become: yes
+  become_method: sudo
+  vars:
+    postgresql_users:
+      - name: graphite
+        pass: graphite
+        encrypted: no
+    postgresql_databases:
+      - name: graphite
+        owner: graphite
+      - name: grafana
+        owner: graphite
+  roles:
+    - ANXS.postgresql
+
+- hosts: app-monitoring
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Configure storage schemas
+    action: template src=templates/local_settings.py.j2 dest=/etc/graphite/local_settings.py
+  - name: Install pip
+    easy_install: name=pip state=latest
+  - name: Install pexpect
+    pip: name=pexpect
+  - name: Initialize the database
+    command: sudo graphite-manage syncdb --noinput
+
+  - name: Copy Graphite Apache config template
+    command: sudo cp /usr/share/graphite-web/apache2-graphite.conf /etc/apache2/sites-available
+  - name: Change Graphite’s port from 80 to 8080
+    replace: dest=/etc/apache2/sites-available/apache2-graphite.conf regexp='80' replace='8080' backup=yes
+  - name: Add Listen 8080 after Listen 80 in ports.conf
+    action: template src=templates/ports.conf.j2 dest=/etc/apache2/ports.conf
+  - name: Disable the default Apache site to avoid conflicts
+    command: sudo a2dissite 000-default
+  - name: Enable Graphite’s virtual site
+    command: sudo a2ensite apache2-graphite
+  - name: Reload Apache to apply the changes
+    command: sudo service apache2 reload

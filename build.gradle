@@ -29,5 +29,12 @@ repositories {
 dependencies {
 	compile('org.springframework.boot:spring-boot-starter')
 	compile('org.springframework.boot:spring-boot-starter-web')
+
+	// Dropwizard dependencies
+	compile('com.ryantenney.metrics:metrics-spring:3.1.2')
+	compile('io.dropwizard.metrics:metrics-graphite:3.1.2')
+	compile('io.dropwizard.metrics:metrics-jvm:3.1.2')
+	compile('io.dropwizard.metrics:metrics-servlets:3.1.2')
+
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }

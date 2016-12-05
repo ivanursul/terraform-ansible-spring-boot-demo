@@ -1,0 +1,31 @@
+---
+- hosts: app-monitoring
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Add Grafana’s repository to sources.list
+    apt_repository: repo='deb https://packagecloud.io/grafana/stable/debian/ wheezy main' state=present
+  - name: Install curl
+    apt: pkg={{ item }} state=latest
+    with_items:
+    - curl
+  - name: Add the Package Cloud key to install signed packages
+    shell: curl https://packagecloud.io/gpg.key | sudo apt-key add -
+  - name: Update
+    apt: update_cache=yes
+  - name: Update apt and install Grafana
+    command: sudo apt-get install -qq grafana
+  - name: Configure Grafana to use the PostgreSQL database created earlier
+    action: template src=templates/grafana.ini.j2 dest=/etc/grafana/grafana.ini
+
+  - name: Configure Grafana to run after boot
+    command: sudo update-rc.d grafana-server defaults 95 10
+  - name: Start services
+    command: sudo service grafana-server restart
+
+- hosts: app-monitoring
+  sudo: yes
+  sudo_user: postgres
+  tasks:
+    - name: psql insert data_source
+      command: psql -d grafana -c "INSERT INTO data_source(org_id,version,type,name,access,url,basic_auth,is_default,created,updated) VALUES(1,0,'graphite','graphite','proxy', 'http://{{ inventory_hostname }}:8080',false,false, now(), now());"

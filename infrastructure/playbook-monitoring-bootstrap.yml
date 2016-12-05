@@ -1,0 +1,3 @@
+---
+- include: playbook-monitoring-graphite.yml
+- include: playbook-monitoring-grafana.yml

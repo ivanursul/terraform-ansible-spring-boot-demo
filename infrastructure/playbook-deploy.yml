@@ -13,3 +13,7 @@
           - "8080:8080"
         expose:
           - 8080
+        env:
+          metrics.enabled: "true"
+          graphite.enabled: "true"
+          graphite.host: "{{ groups['app-monitoring'][0] }}"

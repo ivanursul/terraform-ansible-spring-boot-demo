@@ -1,3 +1,4 @@
 ---
+- include: playbook-monitoring-bootstrap.yml
 - include: playbook-install.yml
 - include: playbook-deploy.yml
