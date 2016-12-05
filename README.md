@@ -6,5 +6,5 @@ This articles are for java guys, who works with Spring framework, but I believe 
 * [Better application deployment with DigitalOcean, Terraform, Ansible and Docker. Creating basic terraform instances](https://ivanursul.com/better-application-deployment-with-terraform-ansible-and-docker-part-1/)
 * [Better application deployment with DigitalOcean, Terraform, Ansible and Docker. DNS Records](https://ivanursul.com/better-application-deployment-with-digitalocean-terraform-ansible-and-docker-dns-records/)
 * [Better application deployment with DigitalOcean, Terraform, Ansible and Docker. Connecting Terraform with Ansible.](https://ivanursul.com/better-application-deployment-with-digitalocean-terraform-ansible-and-docker-connecting-terraform-with-ansible/)
-
+* [Better application deployment. Monitoring your application with Graphite/Grafana](https://ivanursul.com/better-application-deployment-monitoring-your-application-with-graphite-grafana)
 ## [ivanursul.com](https://ivanursul.com/)
